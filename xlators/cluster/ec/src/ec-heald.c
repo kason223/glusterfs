@@ -326,9 +326,9 @@ ec_shd_index_healer(void *data)
         ec_shd_healer_wait(healer);
 
         if (ec->xl_up_count > ec->fragments) {
-            gf_msg_debug(this->name, 0, "starting index sweep on subvol %s",
-                         ec_subvol_name(this, healer->subvol));
-            ec_shd_index_sweep(healer);
+            gf_msg_debug(this->name, 0, "starting index sweep on subvol %s xl_up_count %d fragments %d",
+                         ec_subvol_name(this, healer->subvol), ec->xl_up_count, ec->fragments);
+        //     ec_shd_index_sweep(healer);
         }
         gf_msg_debug(this->name, 0, "finished index sweep on subvol %s",
                      ec_subvol_name(this, healer->subvol));
