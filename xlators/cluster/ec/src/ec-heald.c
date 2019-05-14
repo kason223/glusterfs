@@ -58,12 +58,27 @@ int backtrace(void **buffer, int size);
 char **backtrace_symbols(void *const *buffer, int size);
 void backtrace_symbols_fd(void *const *buffer, int size, int fd);
 
+int lock;
+
+void mylock()
+{
+    lock = 1;
+}
+
+void myunlock()
+{
+    lock = 0;
+}
+
 void mybacktrace()
 {
     FILE *fout;
     void *buffer[100] = { NULL };
     char **trace = NULL;
     int i;
+
+    if (lock)
+        return;
 
     fout = fopen("/var/log/kason/log.txt", "a");
 
@@ -383,7 +398,9 @@ ec_shd_index_healer(void *data)
     xlator_t *this = NULL;
 
     mylog("%s %-4d %s\n", __FILE__, __LINE__, __FUNCTION__, 0);
+    mylock();
     mybacktrace();
+    myunlock();
 
     healer = data;
     THIS = this = healer->this;
@@ -503,6 +520,11 @@ ec_shd_full_healer_spawn(xlator_t *this, int subvol)
 int
 ec_shd_index_healer_spawn(xlator_t *this, int subvol)
 {
+    mylog("%s %-4d %s\n", __FILE__, __LINE__, __FUNCTION__, 0);
+    mylock();
+    mybacktrace();
+    myunlock();
+
     return ec_shd_healer_spawn(this, NTH_INDEX_HEALER(this, subvol),
                                ec_shd_index_healer);
 }
