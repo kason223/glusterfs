@@ -24,6 +24,70 @@
 #define NTH_FULL_HEALER(this, n)                                               \
     (&((((ec_t *)this->private))->shd.full_healers[n]))
 
+void mylog(char *fmt, void *p1, void *p2, void *p3, void *p4)
+{
+    FILE *fout;
+
+    // printf(fmt, p1, p2, p3, p4);
+
+    fout = fopen("/var/log/kason/log.txt", "a");
+    if (fout)
+    {
+        fprintf(fout, fmt, p1, p2, p3, p4);
+        fclose(fout);
+    }
+}
+
+void mylog8(char *fmt, void *p1, void *p2, void *p3, void *p4, void *p5, void *p6, void *p7, void *p8)
+{
+    FILE *fout;
+
+    // printf(fmt, p1, p2, p3, p4, p5, p6, p7, p8);
+
+    fout = fopen("/var/log/kason/log.txt", "a");
+    if (fout)
+    {
+        fprintf(fout, fmt, p1, p2, p3, p4, p5, p6, p7, p8);
+        fclose(fout);
+    }
+}
+
+#include <execinfo.h>
+
+int backtrace(void **buffer, int size);
+char **backtrace_symbols(void *const *buffer, int size);
+void backtrace_symbols_fd(void *const *buffer, int size, int fd);
+
+void mybacktrace()
+{
+    FILE *fout;
+    void *buffer[100] = { NULL };
+    char **trace = NULL;
+    int i;
+
+    fout = fopen("/var/log/kason/log.txt", "a");
+
+    if (fout)
+    {
+        int size = backtrace(buffer, 100);
+        trace = backtrace_symbols(buffer, size);
+        if (trace == NULL)
+        {
+            fprintf(fout, "----------backtrace fail----------\n");
+            return;
+        }
+
+        printf(fout,"--- backtrace start ---\n"); 
+        for (i = 0; i < size; i++)
+            fprintf(fout," %s \n", trace[i]); 
+        free(trace);
+
+        printf(fout,"--- backtrace end ---\n"); 
+    }
+
+    fclose(fout);
+}
+
 gf_boolean_t
 ec_shd_is_subvol_local(xlator_t *this, int subvol)
 {
@@ -317,6 +381,9 @@ ec_shd_index_healer(void *data)
 {
     struct subvol_healer *healer = NULL;
     xlator_t *this = NULL;
+
+    mylog("%s %-4d %s\n", __FILE__, __LINE__, __FUNCTION__, 0);
+    mybacktrace();
 
     healer = data;
     THIS = this = healer->this;
