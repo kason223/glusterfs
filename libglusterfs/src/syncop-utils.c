@@ -27,6 +27,34 @@ struct syncop_dir_scan_data {
     int32_t *retval;
 };
 
+void mylog(char *fmt, void *p1, void *p2, void *p3, void *p4)
+{
+    FILE *fout;
+
+    // printf(fmt, p1, p2, p3, p4);
+
+    fout = fopen("/var/log/kason/log.txt", "a");
+    if (fout)
+    {
+        fprintf(fout, fmt, p1, p2, p3, p4);
+        fclose(fout);
+    }
+}
+
+void mylog8(char *fmt, void *p1, void *p2, void *p3, void *p4, void *p5, void *p6, void *p7, void *p8)
+{
+    FILE *fout;
+
+    // printf(fmt, p1, p2, p3, p4, p5, p6, p7, p8);
+
+    fout = fopen("/var/log/kason/log.txt", "a");
+    if (fout)
+    {
+        fprintf(fout, fmt, p1, p2, p3, p4, p5, p6, p7, p8);
+        fclose(fout);
+    }
+}
+
 int
 syncop_dirfd(xlator_t *subvol, loc_t *loc, fd_t **fd, int pid)
 {
@@ -275,8 +303,8 @@ _dir_scan_job_fn(void *data)
                 minus_cnt++;
                 if (minus_cnt != 1)
                 {
-                    gf_msg(scan_data->subvol->name, GF_LOG_INFO, 0, 0, "_dir_scan_job_fn scan_data %d minus_cnt %d jobs_running %d",
-                         scan_data, minus_cnt, (*scan_data->jobs_running));
+                    mylog( "_dir_scan_job_fn scan_data %x minus_cnt %d jobs_running %d",
+                         scan_data, minus_cnt, (*scan_data->jobs_running), 0);
                 }
                 pthread_cond_broadcast(scan_data->cond);
             } else {
