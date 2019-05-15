@@ -58,16 +58,16 @@ int backtrace(void **buffer, int size);
 char **backtrace_symbols(void *const *buffer, int size);
 void backtrace_symbols_fd(void *const *buffer, int size, int fd);
 
-int lock;
+int my_global_lock;
 
 void mylock()
 {
-    lock = 1;
+    my_global_lock = 1;
 }
 
 void myunlock()
 {
-    lock = 0;
+    my_global_lock = 0;
 }
 
 void mybacktrace()
@@ -77,7 +77,7 @@ void mybacktrace()
     char **trace = NULL;
     int i;
 
-    if (lock)
+    if (my_global_lock)
         return;
 
     fout = fopen("/var/log/kason/log.txt", "a");
