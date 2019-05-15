@@ -43,6 +43,10 @@ static char *ec_read_policies[EC_READ_POLICY_MAX + 1] = {
         }                                                                      \
     } while (0)
 
+void mylog(char *fmt, void *p1, void *p2, void *p3, void *p4);
+void mylog8(char *fmt, void *p1, void *p2, void *p3, void *p4, void *p5, void *p6, void *p7, void *p8);
+void mybacktrace();
+
 int32_t
 ec_parse_options(xlator_t *this)
 {
@@ -592,6 +596,7 @@ unlock:
 done:
     if (propagate) {
         if (needs_shd_check && ec->shd.iamshd) {
+            mylog("%s %-4d %s event %d\n", __FILE__, __LINE__, __FUNCTION__, event);
             ec_launch_replace_heal(ec);
         }
 
