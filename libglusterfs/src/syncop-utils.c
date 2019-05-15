@@ -354,10 +354,10 @@ syncop_mt_dir_scan(call_frame_t *frame, xlator_t *subvol, loc_t *loc, int pid,
     /*For this functionality to be implemented in general, we need
      * synccond_t infra which doesn't block the executing thread. Until then
      * return failures inside synctask if they use this.*/
-    if (synctask_get() && 0)
+    if (synctask_get())
         return -ENOTSUP;
 
-    if (max_jobs == 0)
+    // if (max_jobs == 0)
         return -EINVAL;
 
     /*Code becomes simpler this way. cond_wait just on qlength.
