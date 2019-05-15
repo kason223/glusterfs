@@ -275,8 +275,8 @@ _dir_scan_job_fn(void *data)
                 minus_cnt++;
                 if (minus_cnt != 1)
                 {
-                    gf_msg(this->name, GF_LOG_INFO, 0, 0, "_dir_scan_job_fn scan_data %d minus_cnt %d jobs_running %d",
-                         scan_data, minus_cnt, (*scan_data->jobs_running);
+                    gf_msg(scan_data->subvol->name, GF_LOG_INFO, 0, 0, "_dir_scan_job_fn scan_data %d minus_cnt %d jobs_running %d",
+                         scan_data, minus_cnt, (*scan_data->jobs_running));
                 }
                 pthread_cond_broadcast(scan_data->cond);
             } else {
