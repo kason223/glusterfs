@@ -392,9 +392,7 @@ ec_shd_index_healer(void *data)
     xlator_t *this = NULL;
 
     mylog("%s %-4d %s\n", __FILE__, __LINE__, __FUNCTION__, 0);
-    mylock();
     mybacktrace();
-    myunlock();
 
     healer = data;
     THIS = this = healer->this;
@@ -515,9 +513,7 @@ int
 ec_shd_index_healer_spawn(xlator_t *this, int subvol)
 {
     mylog("%s %-4d %s\n", __FILE__, __LINE__, __FUNCTION__, 0);
-    mylock();
     mybacktrace();
-    myunlock();
 
     return ec_shd_healer_spawn(this, NTH_INDEX_HEALER(this, subvol),
                                ec_shd_index_healer);
