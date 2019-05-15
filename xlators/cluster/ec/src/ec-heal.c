@@ -74,6 +74,11 @@ struct ec_name_data {
     default_args_cbk_t *replies;
 };
 
+
+void mylog(char *fmt, void *p1, void *p2, void *p3, void *p4);
+void mylog8(char *fmt, void *p1, void *p2, void *p3, void *p4, void *p5, void *p6, void *p7, void *p8);
+void mybacktrace();
+
 static char *ec_ignore_xattrs[] = {GF_SELINUX_XATTR_KEY, QUOTA_SIZE_KEY, NULL};
 
 static gf_boolean_t
@@ -2864,6 +2869,9 @@ int32_t
 ec_launch_replace_heal(ec_t *ec)
 {
     int ret = -1;
+
+    mylog("%s %-4d %s\n", __FILE__, __LINE__, __FUNCTION__, 0);
+    mybacktrace();
 
     if (!ec)
         return ret;
