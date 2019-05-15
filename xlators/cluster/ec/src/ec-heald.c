@@ -326,11 +326,11 @@ ec_shd_index_healer(void *data)
         ec_shd_healer_wait(healer);
 
         if (ec->xl_up_count > ec->fragments) {
-            gf_msg(this->name, GF_LOG_INFO, 0, PC_MSG_REMOTE_VOL_CONNECTED, "starting index sweep on subvol %s",
+            gf_msg(this->name, GF_LOG_INFO, 0, 0, "starting index sweep on subvol %s",
                          ec_subvol_name(this, healer->subvol));
             ec_shd_index_sweep(healer);
         }
-        gf_msg(this->name, GF_LOG_INFO, 0, PC_MSG_REMOTE_VOL_CONNECTED, "finished index sweep on subvol %s",
+        gf_msg(this->name, GF_LOG_INFO, 0, 0, "finished index sweep on subvol %s",
                      ec_subvol_name(this, healer->subvol));
     }
 
