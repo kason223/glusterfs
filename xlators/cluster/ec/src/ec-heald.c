@@ -63,7 +63,7 @@ __ec_shd_healer_wait(struct subvol_healer *healer)
     ec = healer->this->private;
 
 disabled_loop:
-    wait_till.tv_sec = time(NULL) + 1800;
+    wait_till.tv_sec = time(NULL) + 60;
 
     while (!healer->rerun) {
         ret = pthread_cond_timedwait(&healer->cond, &healer->mutex, &wait_till);
@@ -326,11 +326,11 @@ ec_shd_index_healer(void *data)
         ec_shd_healer_wait(healer);
 
         if (ec->xl_up_count > ec->fragments) {
-            gf_msg_debug(this->name, 0, "starting index sweep on subvol %s",
+            gf_msg(this->name, GF_LOG_INFO, 0, PC_MSG_REMOTE_VOL_CONNECTED, "starting index sweep on subvol %s",
                          ec_subvol_name(this, healer->subvol));
             ec_shd_index_sweep(healer);
         }
-        gf_msg_debug(this->name, 0, "finished index sweep on subvol %s",
+        gf_msg(this->name, GF_LOG_INFO, 0, PC_MSG_REMOTE_VOL_CONNECTED, "finished index sweep on subvol %s",
                      ec_subvol_name(this, healer->subvol));
     }
 
