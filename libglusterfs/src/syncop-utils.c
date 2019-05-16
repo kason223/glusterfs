@@ -285,7 +285,6 @@ _dir_scan_job_fn(void *data)
     struct syncop_dir_scan_data *scan_data = data;
     gf_dirent_t *entry = NULL;
     int ret = 0;
-    int minus_cnt = 0;
 
     entry = scan_data->entry;
     scan_data->entry = NULL;
@@ -300,12 +299,6 @@ _dir_scan_job_fn(void *data)
                 *scan_data->retval |= ret;
             if (list_empty(&scan_data->q->list)) {
                 (*scan_data->jobs_running)--;
-                minus_cnt++;
-                if (minus_cnt != 1)
-                {
-                    mylog( "_dir_scan_job_fn scan_data %x minus_cnt %d jobs_running %d",
-                         scan_data, minus_cnt, (*scan_data->jobs_running), 0);
-                }
                 pthread_cond_broadcast(scan_data->cond);
             } else {
                 entry = list_first_entry(&scan_data->q->list,
