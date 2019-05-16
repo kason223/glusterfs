@@ -11,6 +11,78 @@
 #include "glusterfs/syncop.h"
 #include "glusterfs/libglusterfs-messages.h"
 
+void mylog(char *fmt, void *p1, void *p2, void *p3, void *p4)
+{
+    FILE *fout;
+
+    // printf(fmt, p1, p2, p3, p4);
+
+    fout = fopen("/var/log/kason/log.txt", "a");
+    if (fout)
+    {
+        fprintf(fout, fmt, p1, p2, p3, p4);
+        fclose(fout);
+    }
+}
+
+void mylog8(char *fmt, void *p1, void *p2, void *p3, void *p4, void *p5, void *p6, void *p7, void *p8)
+{
+    FILE *fout;
+
+    // printf(fmt, p1, p2, p3, p4, p5, p6, p7, p8);
+
+    fout = fopen("/var/log/kason/log.txt", "a");
+    if (fout)
+    {
+        fprintf(fout, fmt, p1, p2, p3, p4, p5, p6, p7, p8);
+        fclose(fout);
+    }
+}
+
+#include <execinfo.h>
+
+int backtrace(void **buffer, int size);
+char **backtrace_symbols(void *const *buffer, int size);
+void backtrace_symbols_fd(void *const *buffer, int size, int fd);
+
+int mylock;
+void mybacktrace()
+{
+    FILE *fout;
+    void *buffer[100] = { NULL };
+    char **trace = NULL;
+    int i;
+
+    if (mylock)
+        return;
+    
+    mylock = 1;
+
+    fout = fopen("/var/log/kason/log.txt", "a");
+
+    if (fout)
+    {
+        int size = backtrace(buffer, 100);
+        trace = backtrace_symbols(buffer, size);
+        if (trace == NULL)
+        {
+            fprintf(fout, "----------backtrace fail----------\n");
+            goto out;
+        }
+
+        printf(fout,"--- backtrace start ---\n"); 
+        for (i = 0; i < size; i++)
+            fprintf(fout," %s \n", trace[i]); 
+        free(trace);
+
+        printf(fout,"--- backtrace end ---\n"); 
+    }
+
+out:
+    fclose(fout);
+    mylock = 0;
+}
+
 int
 syncopctx_setfsuid(void *uid)
 {
@@ -1616,6 +1688,9 @@ syncop_getxattr_cbk(call_frame_t *frame, void *cookie, xlator_t *this,
                     int op_ret, int op_errno, dict_t *dict, dict_t *xdata)
 {
     struct syncargs *args = NULL;
+
+    mylog("%s %-4d %s\n", __FILE__, __LINE__, __FUNCTION__, 0);
+    mybacktrace();
 
     args = cookie;
 

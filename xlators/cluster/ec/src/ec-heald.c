@@ -179,8 +179,6 @@ ec_shd_index_heal(xlator_t *subvol, gf_dirent_t *entry, loc_t *parent,
     loc_t loc = {0};
     int ret = 0;
 
-    return -EBUSY;
-
     ec = healer->this->private;
     if (ec->xl_up_count <= ec->fragments) {
         return -ENOTCONN;
